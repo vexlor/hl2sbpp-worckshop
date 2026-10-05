@@ -1,5 +1,0 @@
-Set the real new Addons site URL in public/addons-external-bridge.js:
-window.ADDONS_SITE_URL = "https://YOUR-ADDONS-SITE.onrender.com";
-
-Then every addon card/link with an addon ID will open:
-https://YOUR-ADDONS-SITE.onrender.com/addon/ID
