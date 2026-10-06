@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Аддон — HL2SBPP Workshop</title>
+  <link rel="stylesheet" href="/style.css">
+  <style>
+    body{min-height:100vh;background:var(--bg,#07101b);color:var(--text,#eef5ff)}
+    .addon-shell{max-width:1320px;margin:0 auto;padding:22px 24px 70px}
+    .addon-top{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:20px}
+    .addon-brand{font-weight:900;letter-spacing:.08em;text-decoration:none;color:inherit}
+    .addon-back{border:1px solid var(--line,#243348);background:var(--panel,#0d1725);color:inherit;border-radius:12px;padding:10px 14px;cursor:pointer}
+    .addon-grid-page{display:grid;grid-template-columns:minmax(0,1fr) 360px;gap:22px}
+    .addon-card-page{background:var(--panel,#0d1725);border:1px solid var(--line,#243348);border-radius:20px;overflow:hidden;box-shadow:0 16px 50px rgba(0,0,0,.18)}
+    .hero-media{aspect-ratio:16/8;min-height:300px;background:#050b13;display:flex;align-items:center;justify-content:center;overflow:hidden}
+    .hero-media img{width:100%;height:100%;object-fit:cover;display:block}
+    .media-empty{font-size:48px;opacity:.35}
+    .thumb-row{display:flex;gap:10px;padding:12px;overflow:auto;border-top:1px solid var(--line,#243348)}
+    .thumb-row button{width:76px;height:56px;padding:0;border:1px solid var(--line,#243348);background:#08111d;border-radius:9px;overflow:hidden;flex:0 0 auto;cursor:pointer}
+    .thumb-row button.active{outline:2px solid var(--accent,#159cff)}
+    .thumb-row img{width:100%;height:100%;object-fit:cover}
+    .addon-content{padding:22px}
+    .addon-title-row{display:flex;justify-content:space-between;gap:18px;align-items:flex-start}
+    .addon-title-row h1{margin:0;font-size:32px;line-height:1.1}
+    .rating-box{text-align:right;white-space:nowrap}.rating-box .stars{font-size:18px}.rating-box small{display:block;color:var(--muted,#8ea0b7);margin-top:4px}
+    .author-row{display:flex;align-items:center;gap:10px;margin:15px 0;color:var(--muted,#9badc3)}
+    .author-row .avatar{width:34px;height:34px;border-radius:50%;object-fit:cover}
+    .desc{color:#c8d4e4;line-height:1.7;white-space:pre-wrap}
+    .gallery-note{font-size:12px;color:var(--muted,#8ea0b7);margin-top:8px}
+    .side-card{background:var(--panel,#0d1725);border:1px solid var(--line,#243348);border-radius:20px;padding:20px;position:sticky;top:18px}
+    .side-card h2{margin:0 0 14px;font-size:21px}.mini-cover{height:150px;border-radius:14px;overflow:hidden;background:#050b13;margin-bottom:16px}.mini-cover img{width:100%;height:100%;object-fit:cover}
+    .info-list{display:grid;gap:11px;margin:18px 0}.info-list div{display:flex;justify-content:space-between;gap:12px;padding-bottom:10px;border-bottom:1px solid var(--line,#243348)}.info-list span{color:var(--muted,#8ea0b7)}
+    .wide{width:100%;margin-top:5px}.action-row{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:10px}.action-row button{min-height:44px;border:1px solid var(--line,#243348);border-radius:11px;background:#101d2d;color:inherit;cursor:pointer}
+    .tags{display:flex;gap:8px;flex-wrap:wrap;margin-top:15px}.tag{padding:7px 10px;border-radius:999px;background:#12243a;border:1px solid #21415e;color:#b9d8f5;font-size:12px}
+    .comments-box{margin-top:22px;background:var(--panel,#0d1725);border:1px solid var(--line,#243348);border-radius:20px;padding:22px}.comments-head{display:flex;justify-content:space-between;align-items:center}.comments-head h2{margin:0}
+    .comment-form{display:flex;gap:10px;margin:16px 0}.comment-form input{flex:1;min-width:0;background:#08111d;border:1px solid var(--line,#243348);color:inherit;border-radius:11px;padding:12px}.comment-form button{border:0;border-radius:11px;padding:0 18px;background:var(--accent,#159cff);color:white;font-weight:800;cursor:pointer}
+    .comment{display:flex;gap:11px;padding:14px 0;border-top:1px solid var(--line,#243348)}.comment .avatar{width:38px;height:38px;border-radius:50%;object-fit:cover;flex:0 0 auto}.comment-body{min-width:0}.comment-head{display:flex;gap:9px;align-items:center;flex-wrap:wrap}.comment-head span{font-size:12px;color:var(--muted,#8ea0b7)}.comment-body p{margin:6px 0 0;color:#c9d5e4;white-space:pre-wrap;word-break:break-word}
+    .status-line{min-height:22px;color:var(--muted,#8ea0b7);font-size:13px}.error-box{padding:30px;text-align:center}.error-box h1{margin-top:0}
+    @media(max-width:900px){.addon-grid-page{grid-template-columns:1fr}.side-card{position:static}.addon-title-row{flex-direction:column}.rating-box{text-align:left}.addon-shell{padding:14px}.hero-media{min-height:210px}.comment-form{flex-direction:column}.comment-form button{height:44px}}
+  </style>
+</head>
+<body>
+  <main class="addon-shell">
+    <div class="addon-top">
+      <a class="addon-brand" href="/">HL2SBPP WORKSHOP</a>
+      <button class="addon-back" id="backBtn" type="button">← Вернуться в Workshop</button>
+    </div>
+    <div id="pageStatus" class="status-line">Загрузка аддона...</div>
+    <section id="addonPage" class="addon-grid-page" hidden></section>
+  </main>
+  <div id="toast" class="toast"></div>
+  <script src="/addon.js"></script>
+</body>
+</html>
