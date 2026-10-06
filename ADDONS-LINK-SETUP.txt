@@ -1,0 +1,5 @@
+Workshop -> Addons direct navigation
+
+ADDONS_SITE_URL=https://hl2sbpp-addonss.onrender.com
+
+Addon cards and direct /addon/:id visits redirect straight to the external Addons site.
